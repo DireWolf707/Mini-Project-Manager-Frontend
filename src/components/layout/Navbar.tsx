@@ -17,6 +17,12 @@ const Navbar = () => {
           {user ? (
             <>
               <Link to="/projects">Projects</Link>
+              <Link
+                to="/create-project"
+                className="border-red-500 border-2 px-2 rounded"
+              >
+                Create Project
+              </Link>
               <Button
                 className="hover:cursor-pointer"
                 onClick={() => {

@@ -12,12 +12,12 @@ import { useState } from "react"
 import { useNavigate, useOutletContext } from "react-router"
 
 const defaultForm = {
-  email: "",
-  password: "",
+  title: "",
+  dueDate: "",
 }
 
-const Login = () => {
-  const { setUser } = useOutletContext()
+const CreateTaskForm = ({ projectId, getProject }) => {
+  const { user } = useOutletContext()
   const [form, setForm] = useState(defaultForm)
   const navigate = useNavigate()
 
@@ -34,18 +34,14 @@ const Login = () => {
     e.preventDefault()
 
     api
-      .post("/login", form)
-      .then(({ data: { accessToken } }) => {
-        setForm(defaultForm)
-        api
-          .get("/api/auth/me", {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          })
-          .then(({ data }) => {
-            navigate("/projects")
-            setUser({ ...data, accessToken })
-          })
-      })
+      .post(
+        `/api/projects/${projectId}/tasks`,
+        { ...form, dueDate: form.dueDate === "" ? null : form.dueDate },
+        {
+          headers: { Authorization: `Bearer ${user.accessToken}` },
+        }
+      )
+      .then(() => getProject())
       .catch(console.log)
   }
 
@@ -53,28 +49,28 @@ const Login = () => {
     <form onSubmit={handleSubmit} className="m-auto w-full max-w-md px-8">
       <FieldSet>
         <FieldLegend className="text-center text-red-500">
-          User Login
+          Create Task
         </FieldLegend>
 
         <FieldGroup>
           <Field>
-            <FieldLabel>Email</FieldLabel>
+            <FieldLabel>Title</FieldLabel>
             <Input
-              name="email"
-              type="email"
+              name="title"
               required
-              value={form.email}
+              minLength={3}
+              maxLength={100}
+              value={form.title}
               onChange={handleChange}
             />
           </Field>
 
           <Field>
-            <FieldLabel>Password</FieldLabel>
+            <FieldLabel>Due Date</FieldLabel>
             <Input
-              type="password"
-              name="password"
-              required
-              value={form.password}
+              name="dueDate"
+              type="date"
+              value={form.dueDate}
               onChange={handleChange}
             />
           </Field>
@@ -88,4 +84,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default CreateTaskForm

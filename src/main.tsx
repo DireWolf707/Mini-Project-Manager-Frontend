@@ -7,6 +7,8 @@ import BackendCheck from "./components/layout/BackendCheck.tsx"
 import Login from "./pages/Login.tsx"
 import Signup from "./pages/Signup.tsx"
 import Projects from "./pages/Projects.tsx"
+import CreateProject from "./pages/CreateProject.tsx"
+import Project from "./pages/Project.tsx"
 
 const router = createBrowserRouter([
   {
@@ -19,6 +21,8 @@ const router = createBrowserRouter([
           { path: "login", Component: Login },
           { path: "signup", Component: Signup },
           { path: "projects", Component: Projects },
+          { path: "create-project", Component: CreateProject },
+          { path: "projects/:id", Component: Project },
         ],
       },
     ],
