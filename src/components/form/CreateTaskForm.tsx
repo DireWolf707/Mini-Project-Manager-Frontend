@@ -41,7 +41,10 @@ const CreateTaskForm = ({ projectId, getProject }) => {
           headers: { Authorization: `Bearer ${user.accessToken}` },
         }
       )
-      .then(() => getProject())
+      .then(() => {
+        getProject()
+        setForm(defaultForm)
+      })
       .catch(console.log)
   }
 

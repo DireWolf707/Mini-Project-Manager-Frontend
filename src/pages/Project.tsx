@@ -1,8 +1,10 @@
 import CreateTaskForm from "@/components/form/CreateTaskForm"
+import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { api } from "@/lib/apiClient"
+import { TrashIcon } from "lucide-react"
 import { useEffect, useState } from "react"
-import { Link, useOutletContext, useParams } from "react-router"
+import { useOutletContext, useParams } from "react-router"
 
 const Project = () => {
   const { id } = useParams()
@@ -32,9 +34,9 @@ const Project = () => {
           project.tasks.map((task) => (
             <div
               key={task.id}
-              className="flex flex-col border-2 rounded-2xl p-4 gap-2"
+              className="flex flex-col border-2 rounded-2xl p-4 gap-2 items-center justify-center"
             >
-              <div className="border-b-2 border-red-400 flex items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 {task.title}
 
                 <Checkbox
@@ -58,10 +60,27 @@ const Project = () => {
                       .catch(console.log)
                   }}
                 />
+
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() =>
+                    api
+                      .delete(`/api/tasks/${task.id}`, {
+                        headers: {
+                          Authorization: `Bearer ${user.accessToken}`,
+                        },
+                      })
+                      .then(() => getProject())
+                      .catch(console.log)
+                  }
+                >
+                  <TrashIcon />
+                </Button>
               </div>
 
               {task.dueDate && (
-                <span className="text-xs text-right">
+                <span className="text-xs text-center">
                   Due On: {new Date(task.dueDate).toDateString()}
                 </span>
               )}
